@@ -1,7 +1,3 @@
-variable "kube-context" {
-  default = "test-1"
-}
-
 variable "cert-manager-ns" {
   default = "cert-manager"
 }
@@ -15,7 +11,7 @@ resource "kubernetes_service_account" "cert-manager-tiller" {
 
 resource "kubernetes_cluster_role_binding" "cert-manager-tiller" {
   metadata {
-    name = "tiller"
+    name = "cert-manager-tiller"
   }
 
   role_ref {
@@ -39,18 +35,18 @@ resource "null_resource" "cert-manager-tiller" {
   ]
 
   provisioner "local-exec" {
-    command = "helm --kube-context ${var.kube-context} --tiller-namespace ${var.cert-manager-ns} init --wait --service-account tiller"
+    command = "helm --kube-context ${terraform.workspace} --tiller-namespace ${var.cert-manager-ns} init --wait --service-account tiller"
   }
 
   provisioner "local-exec" {
     when    = "destroy"
-    command = "kubectl --context ${var.kube-context} -n ${var.cert-manager-ns} delete deployment.apps/tiller-deploy service/tiller-deploy"
+    command = "kubectl --context ${terraform.workspace} -n ${var.cert-manager-ns} delete deployment.apps/tiller-deploy service/tiller-deploy"
   }
 }
 
 resource "helm_release" "cert-manager" {
   name      = "cert-manager"
-  chart     = "stable/"
+  chart     = "stable/cert-manager"
   namespace = "${var.cert-manager-ns}"
   version   = "v0.5.2"
 
