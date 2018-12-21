@@ -12,19 +12,19 @@ resource "helm_release" "cert-manager" {
     name  = "image.tag"
     value = "v0.5.2"
   }
-  
+
   set {
-    name = "ingressShim.defaultIssuerName"
+    name  = "ingressShim.defaultIssuerName"
     value = "letsencrypt-staging"
   }
 
   set {
-    name = "ingressShim.defaultIssuerKind"
+    name  = "ingressShim.defaultIssuerKind"
     value = "ClusterIssuer"
   }
 
   set {
-    name = "createCustomResource"
+    name  = "createCustomResource"
     value = "false"
   }
 
