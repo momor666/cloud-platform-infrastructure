@@ -247,7 +247,7 @@ spec:
     - PodSecurityPolicy
   kubernetesApiAccess:
   - 0.0.0.0/0
-  kubernetesVersion: 1.11.6
+  kubernetesVersion: 1.10.12
   masterPublicName: api.${cluster_domain_name}
   networkCIDR: ${network_cidr_block}
   networkID: ${network_id}
