@@ -15,6 +15,11 @@ resource "kubernetes_storage_class" "prometheus_storage" {
   }
 }
 
+data "template_file" "prometheus_operator" {
+  template = "${file("${path.module}/templates/prometheus-operator.yaml.tpl")}"
+  vars     = {}
+}
+
 resource "helm_release" "prometheus_operator" {
   name          = "prometheus-operator"
   chart         = "prometheus-operator"
@@ -22,9 +27,17 @@ resource "helm_release" "prometheus_operator" {
   namespace     = "monitoring"
   recreate_pods = "true"
 
+  values = [
+    "${data.template_file.prometheus_operator.rendered}",
+  ]
+
   depends_on = [
     "null_resource.deploy",
   ]
+
+  lifecycle {
+    ignore_changes = ["keyring"]
+  }
 }
 
 resource "random_id" "username" {
@@ -65,4 +78,8 @@ resource "helm_release" "kube_prometheus" {
     "null_resource.deploy",
     "helm_release.prometheus_operator",
   ]
+
+  lifecycle {
+    ignore_changes = ["keyring"]
+  }
 }

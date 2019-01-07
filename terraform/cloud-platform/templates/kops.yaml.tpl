@@ -222,6 +222,8 @@ spec:
     legacy: false
   kubelet:
     anonymousAuth: false
+    readOnlyPort: 0
+    authenticationTokenWebhook: true
   kubeAPIServer:
     oidcClientID: ${oidc_client_id}
     oidcIssuerURL: ${oidc_issuer_url}
@@ -247,7 +249,7 @@ spec:
     - PodSecurityPolicy
   kubernetesApiAccess:
   - 0.0.0.0/0
-  kubernetesVersion: 1.10.12
+  kubernetesVersion: 1.10.11
   masterPublicName: api.${cluster_domain_name}
   networkCIDR: ${network_cidr_block}
   networkID: ${network_id}
